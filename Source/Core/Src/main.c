@@ -41,7 +41,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+int b[10] = {1, 79, 18, 6, 76, 36, 32, 15, 0, 4};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -49,6 +49,9 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
 void display7SEG(int num);
+void TrafficLightManagement(void);
+void Light_Vertical(int status);
+void Light_Horizontal(int status);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -90,12 +93,10 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int counter = 0;
   while (1)
   {
-	  if(counter >= 10) counter = 0;
-	  display7SEG(counter++);
-	  HAL_Delay(1000);
+	  TrafficLightManagement();
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -153,45 +154,53 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED_Red_Pin|LED_Yellow_Pin|LED_Green_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, HLED_Red_Pin|HLED_Yellow_Pin|HLED_Green_Pin|VLED_Red_Pin
+                          |VLED_Yellow_Pin|VLED_Green_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, SEQ7_A_Pin|SEQ7_B_Pin|SEQ7_C_Pin|SEQ7_D_Pin
-                          |SEQ7_E_Pin|SEQ7_F_Pin|SEQ7_G_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SEQ7_A_Pin|SEQ7_B_Pin|SEQ7_C_Pin|SEQ7_D1_Pin
+                          |SEQ7_E1_Pin|SEQ7_F1_Pin|SEQ7_G1_Pin|SEQ7_D_Pin
+                          |SEQ7_E_Pin|SEQ7_G_Pin|SEQ7_A1_Pin|SEQ7_B1_Pin
+                          |SEQ7_C1_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED_Red_Pin LED_Yellow_Pin LED_Green_Pin */
-  GPIO_InitStruct.Pin = LED_Red_Pin|LED_Yellow_Pin|LED_Green_Pin;
+  /*Configure GPIO pins : HLED_Red_Pin HLED_Yellow_Pin HLED_Green_Pin VLED_Red_Pin
+                           VLED_Yellow_Pin VLED_Green_Pin */
+  GPIO_InitStruct.Pin = HLED_Red_Pin|HLED_Yellow_Pin|HLED_Green_Pin|VLED_Red_Pin
+                          |VLED_Yellow_Pin|VLED_Green_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : SEQ7_A_Pin SEQ7_B_Pin SEQ7_C_Pin SEQ7_D_Pin
-                           SEQ7_E_Pin SEQ7_F_Pin SEQ7_G_Pin */
+                           SEQ7_E_Pin SEQ7_G_Pin */
   GPIO_InitStruct.Pin = SEQ7_A_Pin|SEQ7_B_Pin|SEQ7_C_Pin|SEQ7_D_Pin
-                          |SEQ7_E_Pin|SEQ7_F_Pin|SEQ7_G_Pin;
+                          |SEQ7_E_Pin|SEQ7_G_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : SEQ7_D1_Pin SEQ7_E1_Pin SEQ7_F1_Pin SEQ7_G1_Pin
+                           SEQ7_A1_Pin SEQ7_B1_Pin SEQ7_C1_Pin */
+  GPIO_InitStruct.Pin = SEQ7_D1_Pin|SEQ7_E1_Pin|SEQ7_F1_Pin|SEQ7_G1_Pin
+                          |SEQ7_A1_Pin|SEQ7_B1_Pin|SEQ7_C1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : SEQ7_F_Pin */
+  GPIO_InitStruct.Pin = SEQ7_F_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(SEQ7_F_GPIO_Port, &GPIO_InitStruct);
 
 }
 
 /* USER CODE BEGIN 4 */
 void display7SEG(int num)
 {
-	int b[10];
-	b[0] = 1;
-	b[1] = 79;
-	b[2] = 18;
-	b[3] = 6;
-	b[4] = 76;
-	b[5] = 36;
-	b[6] = 32;
-	b[7] = 15;
-	b[8] = 0;
-	b[9] = 4;
-
 	if (num > 9 || num < 0) return;
 	int sel = b[num];
 
@@ -209,6 +218,115 @@ void display7SEG(int num)
 	sel /= 2;
 	HAL_GPIO_WritePin(SEQ7_A_GPIO_Port, SEQ7_A_Pin, sel % 2);
 }
+
+void display7SEG_1(int num)
+{
+	if (num > 9 || num < 0) return;
+	int sel = b[num];
+
+	HAL_GPIO_WritePin(SEQ7_G1_GPIO_Port, SEQ7_G1_Pin, sel % 2);
+	sel /= 2;
+	HAL_GPIO_WritePin(SEQ7_F1_GPIO_Port, SEQ7_F1_Pin, sel % 2);
+	sel /= 2;
+	HAL_GPIO_WritePin(SEQ7_E1_GPIO_Port, SEQ7_E1_Pin, sel % 2);
+	sel /= 2;
+	HAL_GPIO_WritePin(SEQ7_D1_GPIO_Port, SEQ7_D1_Pin, sel % 2);
+	sel /= 2;
+	HAL_GPIO_WritePin(SEQ7_C1_GPIO_Port, SEQ7_C1_Pin, sel % 2);
+	sel /= 2;
+	HAL_GPIO_WritePin(SEQ7_B1_GPIO_Port, SEQ7_B1_Pin, sel % 2);
+	sel /= 2;
+	HAL_GPIO_WritePin(SEQ7_A1_GPIO_Port, SEQ7_A1_Pin, sel % 2);
+}
+
+void TrafficLightManagement(void)
+{
+	int statusVertical = 0; // 0 - Green | 1 - Yellow | 2 - Red
+	int statusHorizontal = 2; // 0 - Green | 1 - Yellow | 2 - Red
+	int NumToDisplay_Vertical = 0;
+	int NumToDisplay_Horizontal = 0;
+	for (int i = 9; i >= 0; i--) {
+		//Vertical
+		switch (i) {
+		case 9:
+			statusVertical = 0;
+			NumToDisplay_Vertical = 4;
+			break;
+		case 4:
+			statusVertical = 2;
+			NumToDisplay_Vertical = 2;
+			break;
+		case 1:
+			statusVertical = 1;
+			NumToDisplay_Vertical = 1;
+			break;
+		}
+
+		//Horizontal
+		switch (i) {
+		case 9:
+			statusHorizontal = 2;
+			NumToDisplay_Horizontal = 2;
+			break;
+		case 6:
+			statusHorizontal = 1;
+			NumToDisplay_Horizontal = 1;
+			break;
+		case 4:
+			statusHorizontal = 0;
+			NumToDisplay_Horizontal = 4;
+			break;
+		}
+		display7SEG(NumToDisplay_Vertical--);
+		display7SEG_1(NumToDisplay_Horizontal--);
+		Light_Vertical(statusVertical);
+		Light_Horizontal(statusHorizontal);
+		HAL_Delay(1000);
+	}
+}
+
+void Light_Vertical(int status) {
+	switch (status) {
+	case 0:
+		HAL_GPIO_WritePin(VLED_Red_GPIO_Port, VLED_Red_Pin, RESET);
+		HAL_GPIO_WritePin(VLED_Yellow_GPIO_Port, VLED_Yellow_Pin, SET);
+		HAL_GPIO_WritePin(VLED_Green_GPIO_Port, VLED_Green_Pin, SET);
+		break;
+	case 1:
+		HAL_GPIO_WritePin(VLED_Red_GPIO_Port, VLED_Red_Pin, SET);
+		HAL_GPIO_WritePin(VLED_Yellow_GPIO_Port, VLED_Yellow_Pin, RESET);
+		HAL_GPIO_WritePin(VLED_Green_GPIO_Port, VLED_Green_Pin, SET);
+		break;
+	case 2:
+		HAL_GPIO_WritePin(VLED_Red_GPIO_Port, VLED_Red_Pin, SET);
+		HAL_GPIO_WritePin(VLED_Yellow_GPIO_Port, VLED_Yellow_Pin, SET);
+		HAL_GPIO_WritePin(VLED_Green_GPIO_Port, VLED_Green_Pin, RESET);
+		break;
+	}
+}
+
+void Light_Horizontal(int status) {
+	switch (status) {
+	case 0:
+		HAL_GPIO_WritePin(HLED_Red_GPIO_Port, HLED_Red_Pin, RESET);
+		HAL_GPIO_WritePin(HLED_Yellow_GPIO_Port, HLED_Yellow_Pin, SET);
+		HAL_GPIO_WritePin(HLED_Green_GPIO_Port, HLED_Green_Pin, SET);
+		break;
+	case 1:
+		HAL_GPIO_WritePin(HLED_Red_GPIO_Port, HLED_Red_Pin, SET);
+		HAL_GPIO_WritePin(HLED_Yellow_GPIO_Port, HLED_Yellow_Pin, RESET);
+		HAL_GPIO_WritePin(HLED_Green_GPIO_Port, HLED_Green_Pin, SET);
+		break;
+	case 2:
+		HAL_GPIO_WritePin(HLED_Red_GPIO_Port, HLED_Red_Pin, SET);
+		HAL_GPIO_WritePin(HLED_Yellow_GPIO_Port, HLED_Yellow_Pin, SET);
+		HAL_GPIO_WritePin(HLED_Green_GPIO_Port, HLED_Green_Pin, RESET);
+		break;
+	}
+}
+
+
+
 /* USER CODE END 4 */
 
 /**

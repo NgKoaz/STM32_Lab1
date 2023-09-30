@@ -57,18 +57,32 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LED_Red_Pin GPIO_PIN_5
-#define LED_Red_GPIO_Port GPIOA
-#define LED_Yellow_Pin GPIO_PIN_6
-#define LED_Yellow_GPIO_Port GPIOA
-#define LED_Green_Pin GPIO_PIN_7
-#define LED_Green_GPIO_Port GPIOA
+#define VLED_Red_Pin GPIO_PIN_5
+#define VLED_Red_GPIO_Port GPIOA
+#define VLED_Yellow_Pin GPIO_PIN_6
+#define VLED_Yellow_GPIO_Port GPIOA
+#define VLED_Green_Pin GPIO_PIN_7
+#define VLED_Green_GPIO_Port GPIOA
 #define SEQ7_A_Pin GPIO_PIN_0
 #define SEQ7_A_GPIO_Port GPIOB
 #define SEQ7_B_Pin GPIO_PIN_1
 #define SEQ7_B_GPIO_Port GPIOB
 #define SEQ7_C_Pin GPIO_PIN_2
 #define SEQ7_C_GPIO_Port GPIOB
+#define SEQ7_D1_Pin GPIO_PIN_10
+#define SEQ7_D1_GPIO_Port GPIOB
+#define SEQ7_E1_Pin GPIO_PIN_11
+#define SEQ7_E1_GPIO_Port GPIOB
+#define SEQ7_F1_Pin GPIO_PIN_12
+#define SEQ7_F1_GPIO_Port GPIOB
+#define SEQ7_G1_Pin GPIO_PIN_13
+#define SEQ7_G1_GPIO_Port GPIOB
+#define HLED_Red_Pin GPIO_PIN_8
+#define HLED_Red_GPIO_Port GPIOA
+#define HLED_Yellow_Pin GPIO_PIN_9
+#define HLED_Yellow_GPIO_Port GPIOA
+#define HLED_Green_Pin GPIO_PIN_10
+#define HLED_Green_GPIO_Port GPIOA
 #define SEQ7_D_Pin GPIO_PIN_3
 #define SEQ7_D_GPIO_Port GPIOB
 #define SEQ7_E_Pin GPIO_PIN_4
@@ -77,6 +91,12 @@ void Error_Handler(void);
 #define SEQ7_F_GPIO_Port GPIOB
 #define SEQ7_G_Pin GPIO_PIN_6
 #define SEQ7_G_GPIO_Port GPIOB
+#define SEQ7_A1_Pin GPIO_PIN_7
+#define SEQ7_A1_GPIO_Port GPIOB
+#define SEQ7_B1_Pin GPIO_PIN_8
+#define SEQ7_B1_GPIO_Port GPIOB
+#define SEQ7_C1_Pin GPIO_PIN_9
+#define SEQ7_C1_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
