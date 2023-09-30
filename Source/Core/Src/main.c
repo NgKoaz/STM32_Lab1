@@ -48,7 +48,7 @@
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
-
+void clearAllClock(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -90,21 +90,11 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
+  HAL_Delay(3000);
   while (1)
     {
-  	  HAL_GPIO_TogglePin(LED_0_GPIO_Port, LED_0_Pin);HAL_Delay(250);
-  	  HAL_GPIO_TogglePin(LED_1_GPIO_Port, LED_1_Pin);HAL_Delay(250);
-  	  HAL_GPIO_TogglePin(LED_2_GPIO_Port, LED_2_Pin);HAL_Delay(250);
-  	  HAL_GPIO_TogglePin(LED_3_GPIO_Port, LED_3_Pin);HAL_Delay(250);
-  	  HAL_GPIO_TogglePin(LED_4_GPIO_Port, LED_4_Pin);HAL_Delay(250);
-  	  HAL_GPIO_TogglePin(LED_5_GPIO_Port, LED_5_Pin);HAL_Delay(250);
-  	  HAL_GPIO_TogglePin(LED_6_GPIO_Port, LED_6_Pin);HAL_Delay(250);
-  	  HAL_GPIO_TogglePin(LED_7_GPIO_Port, LED_7_Pin);HAL_Delay(250);
-  	  HAL_GPIO_TogglePin(LED_8_GPIO_Port, LED_8_Pin);HAL_Delay(250);
-  	  HAL_GPIO_TogglePin(LED_9_GPIO_Port, LED_9_Pin);HAL_Delay(250);
-  	  HAL_GPIO_TogglePin(LED_10_GPIO_Port, LED_10_Pin);HAL_Delay(250);
-  	  HAL_GPIO_TogglePin(LED_11_GPIO_Port, LED_11_Pin);HAL_Delay(250);
+  	  clearAllClock();
+  	  HAL_Delay(1000);
     }
   /* USER CODE END 3 */
 }
@@ -176,7 +166,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void clearAllClock(void){
+	HAL_GPIO_WritePin(GPIOA, LED_0_Pin|LED_1_Pin|LED_2_Pin|LED_3_Pin
+                          |LED_4_Pin|LED_5_Pin|LED_6_Pin|LED_7_Pin
+                          |LED_8_Pin|LED_9_Pin|LED_10_Pin|LED_11_Pin, GPIO_PIN_SET);
+}
 /* USER CODE END 4 */
 
 /**
