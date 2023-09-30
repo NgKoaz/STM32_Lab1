@@ -41,6 +41,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+//One day = 24 * 60 * 60 seconds
+const int oneDayInSeconds = 24 * 60 * 60;
 short LED_Pin[12] = {
 						LED_0_Pin, LED_1_Pin, LED_2_Pin, LED_3_Pin,
 						LED_4_Pin, LED_5_Pin, LED_6_Pin, LED_7_Pin,
@@ -55,6 +57,7 @@ static void MX_GPIO_Init(void);
 void clearAllClock(void);
 void setNumberOnClock(int num);
 void clearNumberOnClock(int num);
+void DisplayClock(int counterSec, int counterMin, int counterHour);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -97,18 +100,28 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   clearAllClock();
+  int counterSec = 0;
+  int counterMin = 0;
+  int counterHour = 0;
   while (1)
-    {
-  	  for (int i = 0; i <= 11; i++) {
-  		  HAL_Delay(200);
-  		  setNumberOnClock(i);
-  	  }
-  	  HAL_Delay(1000);
-  	  for (int i = 0; i <= 11; i++) {
-		  HAL_Delay(200);
-		  clearNumberOnClock(i);
+  {
+	  DisplayClock(counterSec, counterMin, counterHour);
+	  counterSec++;
+	  if (counterSec >= 60) {
+		  counterSec = 0;
+		  counterMin++;
 	  }
-    }
+	  if (counterMin >= 60) {
+		  counterMin = 0;
+		  counterHour++;
+	  }
+	  if (counterHour >= 12) {
+		  counterSec = 0;
+		  counterMin = 0;
+		  counterHour = 0;
+	  }
+	  HAL_Delay(1000);
+  }
   /* USER CODE END 3 */
 }
 
@@ -193,6 +206,17 @@ void setNumberOnClock(int num){
 void clearNumberOnClock(int num){
 	if (num < 0 || num > 11) return;
 	HAL_GPIO_WritePin(GPIOA, LED_Pin[num], GPIO_PIN_SET);
+}
+
+void DisplayClock(int counterSec, int counterMin, int counterHour){
+	int DisplaySec = counterSec / 5;
+	int DisplayMin = counterMin / 5;
+	int DisplayHour = counterHour;
+	clearAllClock();
+
+	setNumberOnClock(DisplaySec);
+	setNumberOnClock(DisplayMin);
+	setNumberOnClock(DisplayHour);
 }
 /* USER CODE END 4 */
 
