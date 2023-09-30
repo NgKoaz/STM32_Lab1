@@ -41,8 +41,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-//One day = 24 * 60 * 60 seconds
-const int oneDayInSeconds = 24 * 60 * 60;
 short LED_Pin[12] = {
 						LED_0_Pin, LED_1_Pin, LED_2_Pin, LED_3_Pin,
 						LED_4_Pin, LED_5_Pin, LED_6_Pin, LED_7_Pin,
